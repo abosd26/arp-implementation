@@ -16,9 +16,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 /*
- * Change "enp2s0f5" to your device name (e.g. "eth0"), when you test your hoework.
+ * Change "enp2s0f5" to your device name (e.g. "eth0"), when you test the program.
  * If you don't know your device name, you can use "ifconfig" command on Linux.
- * You have to use "enp2s0f5" when you ready to upload your homework.
  */
 #define DEVICE_NAME "enp2s0f5"
 #define MAC_BCAST_ADDR {0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
