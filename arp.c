@@ -35,35 +35,35 @@ void set_op_code(struct ether_arp *packet, short int code)
 void set_sender_hardware_addr(struct ether_arp *packet, char *address)
 {
 	unsigned int temp[6];
-        sscanf(address, "%x:%x:%x:%x:%x:%x", &temp[0], &temp[1], &temp[2], &temp[3], &temp[4], &temp[5]);
-        for(int i = 0; i < 6; i++){
-                packet->arp_sha[i] = (unsigned char)temp[i];
-        }
+	sscanf(address, "%x:%x:%x:%x:%x:%x", &temp[0], &temp[1], &temp[2], &temp[3], &temp[4], &temp[5]);
+	for(int i = 0; i < 6; i++){
+		packet->arp_sha[i] = (unsigned char)temp[i];
+	}
 }
 void set_sender_protocol_addr(struct ether_arp *packet, char *address)
 {
 	unsigned int temp[4];
-        sscanf(address, "%u.%u.%u.%u", &temp[0], &temp[1], &temp[2], &temp[3]);
-        for(int i = 0; i < 4; i++){
-                packet->arp_spa[i] = (unsigned char)temp[i];
-        }
+	sscanf(address, "%u.%u.%u.%u", &temp[0], &temp[1], &temp[2], &temp[3]);
+	for(int i = 0; i < 4; i++){
+		packet->arp_spa[i] = (unsigned char)temp[i];
+	}
 
 }
 void set_target_hardware_addr(struct ether_arp *packet, char *address)
 {
 	unsigned int temp[6];
-        sscanf(address, "%x:%x:%x:%x:%x:%x", &temp[0], &temp[1], &temp[2], &temp[3], &temp[4], &temp[5]);
-        for(int i = 0; i < 6; i++){
-                packet->arp_tha[i] = (unsigned char)temp[i];
-        }
+	sscanf(address, "%x:%x:%x:%x:%x:%x", &temp[0], &temp[1], &temp[2], &temp[3], &temp[4], &temp[5]);
+	for(int i = 0; i < 6; i++){
+		packet->arp_tha[i] = (unsigned char)temp[i];
+	}
 }
 void set_target_protocol_addr(struct ether_arp *packet, char *address)
 {
 	unsigned int temp[4];
-        sscanf(address, "%u.%u.%u.%u", &temp[0], &temp[1], &temp[2], &temp[3]);
-        for(int i = 0; i < 4; i++){
-                packet->arp_tpa[i] = (unsigned char)temp[i];
-        }
+	sscanf(address, "%u.%u.%u.%u", &temp[0], &temp[1], &temp[2], &temp[3]);
+	for(int i = 0; i < 4; i++){
+		packet->arp_tpa[i] = (unsigned char)temp[i];
+	}
 }
 
 char* get_target_protocol_addr(struct ether_arp *packet)
@@ -78,79 +78,51 @@ char* get_sender_protocol_addr(struct ether_arp *packet)
 {
 	// if you use malloc, remember to free it.
 	char* result = (char*)malloc(sizeof(char) * 15);
-        sprintf(result, "%u.%u.%u.%u", packet->arp_spa[0], packet->arp_spa[1], packet->arp_spa[2], packet->arp_spa[3]);
-        return result;
+	sprintf(result, "%u.%u.%u.%u", packet->arp_spa[0], packet->arp_spa[1], packet->arp_spa[2], packet->arp_spa[3]);
+	return result;
 
 }
 char* get_sender_hardware_addr(struct ether_arp *packet)
 {
 	// if you use malloc, remember to free it.
 	char* result = (char*)malloc(sizeof(char) * 17);
-        sprintf(result, "%02x:%02x:%02x:%02x:%02x:%02x", packet->arp_sha[0], packet->arp_sha[1], packet->arp_sha[2], packet->arp_sha[3], packet->arp_sha[4], packet->arp_sha[5]);
-        return result;
+	sprintf(result, "%02x:%02x:%02x:%02x:%02x:%02x", packet->arp_sha[0], packet->arp_sha[1], packet->arp_sha[2], packet->arp_sha[3], packet->arp_sha[4], packet->arp_sha[5]);
+	return result;
 
 }
 char* get_target_hardware_addr(struct ether_arp *packet)
 {
 	// if you use malloc, remember to free it.
 	char* result = (char*)malloc(sizeof(char) * 17);
-        sprintf(result, "%02x:%02x:%02x:%02x:%02x:%02x", packet->arp_tha[0], packet->arp_tha[1], packet->arp_tha[2], packet->arp_tha[3], packet->arp_tha[4], packet->arp_tha[5]);
-        return result;
+	sprintf(result, "%02x:%02x:%02x:%02x:%02x:%02x", packet->arp_tha[0], packet->arp_tha[1], packet->arp_tha[2], packet->arp_tha[3], packet->arp_tha[4], packet->arp_tha[5]);
+	return result;
 
 }
 void print_usage(){
 	printf("Format:\n");
-        printf("1) ./arp -l -a\n");
-        printf("2) ./arp -l <filter_ip_address>\n");
-        printf("3) ./arp -q <query_ip_address>\n");
-        printf("4) ./arp <fake_mac_address> <target_ip_address>\n");
+	printf("1) ./arp -l -a\n");
+	printf("2) ./arp -l <filter_ip_address>\n");
+	printf("3) ./arp -q <query_ip_address>\n");
+	printf("4) ./arp <fake_mac_address> <target_ip_address>\n");
 	exit(1);
 }
 int IsValidMAC(const char* str){
-        for(int i = 0; i < 17; i++){
-                if(i % 3 != 2 && !isxdigit(str[i])){
-                        return 0;
-                }
-                else if(i % 3 == 2 && str[i] != ':'){
-                        return 0;
-                }
-        }
-        return 1;
+	for(int i = 0; i < 17; i++){
+		if(i % 3 != 2 && !isxdigit(str[i])){
+			return 0;
+		}
+		else if(i % 3 == 2 && str[i] != ':'){
+			return 0;
+		}
+	}
+	return 1;
 }
 int IsValidIP(const char* str){
-        struct sockaddr_in sa;
-        int result = inet_pton(AF_INET, str, &(sa.sin_addr));
-        if(result == 1){
-                return 1;
-        }
-        return 0;
+	struct sockaddr_in sa;
+	int result = inet_pton(AF_INET, str, &(sa.sin_addr));
+	if(result == 1){
+		return 1;
+	}
+	return 0;
 }
-/*void StringToBinary(char src[], unsigned char result[], int opt){
-	//convert ip address for opt = 1
-	if(opt == 1){
-		unsigned int temp[4];
-		sscanf(src, "%u.%u.%u.%u", &temp[0], &temp[1], &temp[2], &temp[3]);
-		for(int i = 0; i < 4; i++){
-			result[i] = (unsigned char)temp[i];
-		}
-	}
-	//convert mac address for opt = 2
-	else if(opt == 2){
-		unsigned int temp[6];
-		sscanf(src, "%x:%x:%x:%x:%x:%x", &temp[0], &temp[1], &temp[2], &temp[3], &temp[4], &temp[5]);
-		for(int i = 0; i < 6; i++){
-			result[i] = (unsigned char)temp[i];
-		}
-	}
-}*/
-/*void BinaryToString(unsigned char src[], char result[], int opt){
-	//convert ip address for opt = 1
-	if(opt == 1){
-		sprintf(result, "%u.%u.%u.%u", src[0], src[1], src[2], src[3]);
-	}
-	//convert mac address for opt = 2
-	else if(opt == 2){
-		sprintf(result, "%02x:%02x:%02x:%02x:%02x:%02x", src[0], src[1], src[2], src[3], src[4], src[5]);
-	}
-}*/
 

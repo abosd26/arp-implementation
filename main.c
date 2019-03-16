@@ -16,16 +16,16 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 /*
- * Change "enp2s0f5" to your device name (e.g. "eth0"), when you test the program.
- * If you don't know your device name, you can use "ifconfig" command on Linux.
- */
+* Change "enp2s0f5" to your device name (e.g. "eth0"), when you test the program.
+* If you don't know your device name, you can use "ifconfig" command on Linux.
+*/
 #define DEVICE_NAME "enp2s0f5"
 #define MAC_BCAST_ADDR {0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
 #define IPLEN 4
 /*
- * You have to open two socket to handle this program.
- * One for input , the other for output.
- */
+* You have to open two socket to handle this program.
+* One for input , the other for output.
+*/
 int main(int argc, char* argv[])
 {
 	int sockfd_recv = 0, sockfd_send = 0;
@@ -87,9 +87,9 @@ int main(int argc, char* argv[])
 	}
 
 	/*
-	 * Use recvfrom function to get packet.
-	 * recvfrom( ... )
-	 */
+	* Use recvfrom function to get packet.
+	* recvfrom( ... )
+	*/
 	printf("[ ARP sniffer and spoof program ]\n");
 	if(option == 1 || option == 2){
 		printf("### ARP sniffer mode ###\n");
@@ -111,17 +111,17 @@ int main(int argc, char* argv[])
 					free(ip1);
 					free(ip2);
 				}
-				/*else if(ntohs(buffer.arp.ea_hdr.ar_op) == ARPOP_REPLY){
+				else if(ntohs(buffer.arp.ea_hdr.ar_op) == ARPOP_REPLY){
 					char* ip1 = get_target_protocol_addr(&(buffer.arp));
-                                        char* ip2 = get_sender_protocol_addr(&(buffer.arp));
+					char* ip2 = get_sender_protocol_addr(&(buffer.arp));
 					char* mac = get_sender_hardware_addr(&(buffer.arp));
-                                        if(option == 1 || (option == 2 && (strcmp(argv[2], ip1) == 0 || strcmp(argv[2], ip2) == 0))){
-                                                printf("%s reply to %s\tMAC : %s\n", ip2, ip1, mac);
-                                        }
+					if(option == 1 || (option == 2 && (strcmp(argv[2], ip1) == 0 || strcmp(argv[2], ip2) == 0))){
+						printf("%s reply to %s\tMAC : %s\n", ip2, ip1, mac);
+					}
 					free(mac);
-                                        free(ip1);
-                                        free(ip2);
-				}*/
+					free(ip1);
+					free(ip2);
+				}
 			}
 		}
 	}
@@ -134,9 +134,9 @@ int main(int argc, char* argv[])
 		exit(sockfd_send);
 	}
 	/*
-	 * Use ioctl function binds the send socket and the Network Interface Card.
-`	 * ioctl( ... )
-	 */
+	* Use ioctl function binds the send socket and the Network Interface Card.
+	`	 * ioctl( ... )
+	*/
 	if(option == 3){
 		printf("### ARP query mode ###\n");
 		memset(&req, 0, sizeof(req));
@@ -182,9 +182,9 @@ int main(int argc, char* argv[])
 		set_target_protocol_addr(&(buffer.arp), argv[2]);
 		set_target_hardware_addr(&(buffer.arp), "00:00:00:00:00:00");
 		/*
-	 	 * use sendto function with sa variable to send your packet out
-	 	 * sendto( ... )
-	 	 */
+		* use sendto function with sa variable to send your packet out
+		* sendto( ... )
+		*/
 		int n = sendto(sockfd_send, &buffer, sizeof(buffer), 0, (struct sockaddr*)&sa, sizeof(struct sockaddr_ll));
 		if(n < 0){
 			perror("sendto error");
@@ -194,23 +194,23 @@ int main(int argc, char* argv[])
 		memset(&buffer, 0, sizeof(buffer));
 		while(1){
 			int data_size = recvfrom(sockfd_recv, &buffer, sizeof(buffer), 0, &saddr, (socklen_t *)&saddr_size);
-       			if(data_size < 0){
-        			printf("recvfrom error!\n");
-	                	exit(1);
-        		}
-	        	if(ntohs(buffer.eth_hdr.ether_type) == ETHERTYPE_ARP){
+			if(data_size < 0){
+				printf("recvfrom error!\n");
+				exit(1);
+			}
+			if(ntohs(buffer.eth_hdr.ether_type) == ETHERTYPE_ARP){
 				if(ntohs(buffer.arp.ea_hdr.ar_op) == ARPOP_REPLY){
-                			char* ip1 = get_target_protocol_addr(&(buffer.arp));
-                        		char* ip2 = get_sender_protocol_addr(&(buffer.arp));
-                        		char* mac = get_sender_hardware_addr(&(buffer.arp));
-                        		if(strcmp(ip2, argv[2]) == 0){
+					char* ip1 = get_target_protocol_addr(&(buffer.arp));
+					char* ip2 = get_sender_protocol_addr(&(buffer.arp));
+					char* mac = get_sender_hardware_addr(&(buffer.arp));
+					if(strcmp(ip2, argv[2]) == 0){
 						printf("MAC address of %s is %s\n", ip2, mac);
 					}
-                        		free(mac);
-                	        	free(ip1);
-        	                	free(ip2);
+					free(mac);
+					free(ip1);
+					free(ip2);
 					break;
-	                	}
+				}
 
 			}
 		}

@@ -12,8 +12,6 @@ struct arp_packet
 void print_usage();
 int IsValidMAC(const char* str);
 int IsValidIP(const char* str);
-//void StringToBinary(char src[], unsigned char result[], int opt);
-//void BinaryToString(unsigned char src[], char result[], int opt);
 
 void set_hard_type(struct ether_arp *packet, unsigned short int type);
 void set_prot_type(struct ether_arp *packet, unsigned short int type);
